@@ -29,7 +29,7 @@ export default function UnitTable() {
         }
 
         return (
-            <div key={index} style={style} className="h-14 grid gap-1 grid-cols-[25%_8%_8%_8%_10%_15%_10%_10%] border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+            <div key={index} style={style} className="h-14 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
                 <div className="px-1 text-xs">{data.project}</div>
                 <div className="px-1 text-xs">{data.developerSales[0].soldInMonth}</div>
                 <div className="px-1 text-xs">{data.district}</div>
@@ -52,7 +52,7 @@ export default function UnitTable() {
                         <div className="inline-block min-w-full py-2 sm: lg:px-8">
                             <div className="overflow-hidden">
                                 <div className="min-w-full text-left text-xs font-light overflow-hidden">
-                                    <div className="border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[25%_8%_8%_8%_10%_15%_10%_10%] text-xs">
+                                    <div className="border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
                                         <div className="px-1 text-xs">Project</div>
                                         <div className="px-1 text-xs">Sold in Month</div>
                                         <div className="px-1 text-xs">District</div>

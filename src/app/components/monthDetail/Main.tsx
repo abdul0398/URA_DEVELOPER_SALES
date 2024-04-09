@@ -42,7 +42,7 @@ export default function MonthDetail() {
         }
 
         return (
-            <div key={index} style={style} className="h-14 grid gap-1 grid-cols-[25%_8%_8%_8%_10%_15%_10%_10%] border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+            <div key={index} style={style} className="h-14 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
                 <div className="px-1 text-xs">{data.project}</div>
                 <div className="px-1 text-xs">{data.developerSales[0].launchedInMonth}</div>
                 <div className="px-1 text-xs">{data.district}</div>
@@ -89,7 +89,7 @@ export default function MonthDetail() {
                 <div className="h-1/2 w-full">
                     <h1 className="text-center border">Units Launched in Report Month</h1>
                     <div className="min-w-full text-left text-xs font-light overflow-hidden">
-                        <div className="border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[25%_8%_8%_8%_10%_15%_10%_10%] text-xs">
+                        <div className="border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
                             <div className="px-1 text-xs">Project</div>
                             <div className="px-1 text-xs overflow-hidden">Launched in Month</div>
                             <div className="px-1 text-xs">District</div>
