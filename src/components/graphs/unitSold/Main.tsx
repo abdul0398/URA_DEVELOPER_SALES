@@ -71,7 +71,7 @@ export default function UnitSold() {
   };
 
   return (
-    <div className="w-full h-[500px] border my-5">
+    <div className="w-full h-[750px] my-5">
       <Bar
         data={dataset}
         width={2000}

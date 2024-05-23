@@ -122,7 +122,7 @@ export default function MonthDetail() {
             Units Launched in Report Month ({selectedMonth})
           </h1>
           <div className="min-w-full text-left text-xs font-light overflow-hidden">
-            <div className=" mt-10 border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
+            <div className=" mt-3 border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
               <div className="px-1 text-xs">Project</div>
               <div className="px-1 text-xs overflow-hidden">
                 Launched in Month
@@ -134,9 +134,9 @@ export default function MonthDetail() {
               <div className="px-1 text-xs">Sold to Date</div>
               <div className="px-1 text-xs">Balance Units</div>
             </div>
-            <div className="overflow-hidden mt-10">
+            <div className="overflow-hidden mt-5">
               <List
-                height={500}
+                height={700}
                 itemCount={listings.length}
                 itemSize={50}
                 width={"100%"}

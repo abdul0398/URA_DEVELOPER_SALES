@@ -71,7 +71,7 @@ export default function UnitTable() {
             <div className="inline-block min-w-full py-2 sm: lg:px-8">
               <div className="overflow-hidden">
                 <div className="min-w-full text-left text-xs font-light overflow-hidden">
-                  <div className="border-b font-medium mt-10 dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
+                  <div className="border-b font-medium mt-3 dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
                     <div className="px-1 text-xs">Project</div>
                     <div className="px-1 text-xs">Sold in Month</div>
                     <div className="px-1 text-xs">District</div>
@@ -83,7 +83,7 @@ export default function UnitTable() {
                   </div>
                   <div className="overflow-hidden mt-5">
                     <List
-                      height={500}
+                      height={700}
                       itemCount={listings.length}
                       itemSize={50}
                       width={"100%"}
