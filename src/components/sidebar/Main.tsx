@@ -32,8 +32,8 @@ export default function Sidebar({
                 <Image
                   src="/logo.png"
                   alt="logo"
-                  width={120}
-                  height={120}
+                  width={220}
+                  height={220}
                   className="mx-auto"
                 />
               </div>
