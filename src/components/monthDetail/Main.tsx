@@ -1,9 +1,11 @@
 import { MyContext } from "@/context/context";
 import { IncludeEC } from "@/types/context";
 import dynamic from "next/dynamic";
-import { ChangeEvent, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListChildComponentProps } from "react-window";
 import { data } from "@/data/obj";
+import { FaSort } from "react-icons/fa";
+
 const List = dynamic(
   () => import("react-window").then((mod) => mod.FixedSizeList),
   {
@@ -12,51 +14,91 @@ const List = dynamic(
 );
 
 export default function MonthDetail() {
-  const { includeEC, selectedMonth, setSelectedMonth, setIncludeEC } =
-    useContext(MyContext);
+  const { includeEC, selectedMonth } = useContext(MyContext);
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.getAttribute("data-val");
-    const isChecked = e.target.checked;
-
-    if (val === "All") {
-      setIncludeEC(isChecked ? IncludeEC.All : IncludeEC.NonEC);
-    } else if (val === "EC") {
-      setIncludeEC(
-        isChecked
-          ? IncludeEC.EC
-          : includeEC === IncludeEC.EC
-          ? IncludeEC.NonEC
-          : IncludeEC.All
-      );
-    } else {
-      setIncludeEC(
-        isChecked
-          ? IncludeEC.NonEC
-          : includeEC === IncludeEC.NonEC
-          ? IncludeEC.EC
-          : IncludeEC.All
-      );
-    }
-  };
-
-  let listings = data[selectedMonth].listings;
-  listings = listings.filter(
+  const allListings = data[selectedMonth].listings;
+  const listingsWithLaunched = allListings.filter(
     (item: any) => item.developerSales[0].launchedInMonth > 0
   );
 
-  if (includeEC != "All") {
-    console.log(includeEC);
-    listings = listings.filter(
-      (item: any) =>
-        item.propertyType == (includeEC == "EC" ? "Exec Condo" : "Non-Landed")
-    );
-  }
+  const [listings, setListings] = useState<any[]>(listingsWithLaunched);
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: string;
+  } | null>(null);
 
-  listings.sort(
-    (a: any, b: any) =>
-      b.developerSales[0].launchedInMonth - a.developerSales[0].launchedInMonth
-  );
+  useEffect(() => {
+    if (includeEC !== "All") {
+      const newListing = listingsWithLaunched.filter((item: any) => {
+        return (
+          item.propertyType ===
+          (includeEC === "EC" ? "Exec Condo" : "Non-Landed")
+        );
+      });
+      setListings(newListing);
+    } else {
+      setListings(listingsWithLaunched);
+    }
+  }, [includeEC, selectedMonth]);
+
+  const handleSort = (type: string) => {
+    let direction = "ascending";
+    if (
+      sortConfig &&
+      sortConfig.key === type &&
+      sortConfig.direction === "ascending"
+    ) {
+      direction = "descending";
+    }
+
+    const sortedListings = [...listings].sort((a: any, b: any) => {
+      if (type === "project" || type === "district") {
+        if (a[type] < b[type]) {
+          return direction === "ascending" ? -1 : 1;
+        }
+        if (a[type] > b[type]) {
+          return direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      } else if (type === "soldInMonth") {
+        return direction === "ascending"
+          ? a.developerSales[0].soldInMonth - b.developerSales[0].soldInMonth
+          : b.developerSales[0].soldInMonth - a.developerSales[0].soldInMonth;
+      } else if (type === "unitsAvail") {
+        return direction === "ascending"
+          ? a.developerSales[0].unitsAvail - b.developerSales[0].unitsAvail
+          : b.developerSales[0].unitsAvail - a.developerSales[0].unitsAvail;
+      } else if (type === "soldToDate") {
+        return direction === "ascending"
+          ? a.developerSales[0].soldToDate - b.developerSales[0].soldToDate
+          : b.developerSales[0].soldToDate - a.developerSales[0].soldToDate;
+      } else if (type === "balanceUnits") {
+        const balanceA =
+          a.developerSales[0].unitsAvail - a.developerSales[0].soldToDate;
+        const balanceB =
+          b.developerSales[0].unitsAvail - b.developerSales[0].soldToDate;
+        return direction === "ascending"
+          ? balanceA - balanceB
+          : balanceB - balanceA;
+      } else if (type === "launchedInMonth") {
+        return direction === "ascending"
+          ? a.developerSales[0].launchedInMonth -
+              b.developerSales[0].launchedInMonth
+          : b.developerSales[0].launchedInMonth -
+              a.developerSales[0].launchedInMonth;
+      } else if (type === "launchedToDate") {
+        return direction === "ascending"
+          ? a.developerSales[0].launchedToDate -
+              b.developerSales[0].launchedToDate
+          : b.developerSales[0].launchedToDate -
+              a.developerSales[0].launchedToDate;
+      }
+      return 0;
+    });
+
+    setSortConfig({ key: type, direction });
+    setListings(sortedListings);
+  };
 
   const Row: React.FC<ListChildComponentProps> = ({ index, style }) => {
     const data = listings[index];
@@ -93,51 +135,81 @@ export default function MonthDetail() {
   return (
     <div className="w-full">
       <div className="bg-white w-full px-2">
-        {/* <div className="flex flex-row w-full">
-                    <div className="w-1/2 h-full pt-4">
-                        <h1 className="text-center">Include ECS</h1>
-                        <div className="w-32 mx-auto mt-4">
-                            <div className="flex">
-                                <input type="checkbox" onChange={(e) => handleCheckboxChange(e)} data-val="All" checked={includeEC == "All"} />
-                                <p className="ms-3 font-bold">Select All</p>
-                            </div>
-                            <div className="flex">
-                                <input type="checkbox" onChange={(e) => handleCheckboxChange(e)} data-val="EC" checked={includeEC == 'All' || includeEC == "EC"} />
-                                <p className="ms-3 font-bold">EC</p>
-                            </div>
-                            <div className="flex">
-                                <input type="checkbox" onChange={(e) => handleCheckboxChange(e)} data-val="Non-EC" checked={includeEC == "All" || includeEC == "Non-EC"} />
-                                <p className="ms-3 font-bold">Non-EC</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-1/2 h-full pt-4">
-                        <h1 className="text-center">Report Month</h1>
-                        <p className="text-center font-bold mt-4">{selectedMonth}</p>
-                    </div>
-
-                </div> */}
         <div className="w-full">
           <h1 className="text-center">
             Units Launched in Report Month ({selectedMonth})
           </h1>
           <div className="min-w-full text-left text-xs font-light overflow-hidden">
-            <div className=" mt-3 border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
-              <div className="px-1 text-xs">Project</div>
-              <div className="px-1 text-xs overflow-hidden">
-                Launched in Month
+            <div className=" mt-5 border-b font-medium dark:border-neutral-500 grid gap-1 grid-cols-[15%_14%_10%_10%_10%_15%_10%_10%] text-xs">
+              <div className="px-1 text-xs flex">
+                Project
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("project")}
+                  />
+                </span>
               </div>
-              <div className="px-1 text-xs">District</div>
+              <div className="px-1 flex text-xs overflow-hidden">
+                Launched in Month{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("launchedInMonth")}
+                  />
+                </span>
+              </div>
+              <div className="px-1 text-xs flex">
+                District{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("district")}
+                  />
+                </span>
+              </div>
               <div className="px-1 text-xs">Region</div>
-              <div className="px-1 text-xs">Unit Avail</div>
-              <div className="px-1 text-xs">Launched to Date</div>
-              <div className="px-1 text-xs">Sold to Date</div>
-              <div className="px-1 text-xs">Balance Units</div>
+              <div className="px-1 text-xs flex">
+                Unit Avail{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("unitsAvail")}
+                  />
+                </span>
+              </div>
+              <div className="px-1 text-xs flex">
+                Launched to Date{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("launchedToDate")}
+                  />
+                </span>
+              </div>
+              <div className="px-1 text-xs flex">
+                Sold to Date{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("soldToDate")}
+                  />
+                </span>
+              </div>
+              <div className="px-1 text-xs flex">
+                Balance Units{" "}
+                <span className="flex items-center ms-2">
+                  <FaSort
+                    className="hover:cursor-pointer"
+                    onClick={() => handleSort("balanceUnits")}
+                  />
+                </span>
+              </div>
             </div>
-            <div className="overflow-hidden mt-5">
+            <div className="overflow-hidden mt-">
               <List
                 height={700}
-                itemCount={listings.length}
+                itemCount={allListings.length}
                 itemSize={50}
                 width={"100%"}
               >
