@@ -51,13 +51,6 @@ export default function Dashboard() {
   };
   return (
     <div className="h-full w-full flex justify-center items-center">
-      {isMobile && (
-        <div className="h-48 w-full">
-          <div className="fixed top-0 right-0 opacity-50 z-50">
-            <IoMenu size={40} onClick={sideBarHandler} />
-          </div>
-        </div>
-      )}
       <div className="w-[98%] flex h-[98%] rounded-l-[40px]">
         <Sidebar
           selectedView={selectedView}
@@ -68,19 +61,24 @@ export default function Dashboard() {
         />
         <main
           id="main-container"
-          className="w-full rounded-r-[40px] rounded-l-[40px] lg:rounded-l-none md:rounded-l-none ms-auto border h-full overflow-auto lg:p-2 shadow-md"
+          className="w-full pb-5 rounded-r-[40px] rounded-l-[40px] lg:rounded-l-none md:rounded-l-none ms-auto border h-full overflow-auto lg:p-2 shadow-md"
         >
-          <div className="relative h-14 mt-10">
+          <div className="flex justify-end px-2 h-8 mt-5">
             <Button
               variant="default"
-              className="me-2 absolute bg-[#0c3f74] font-bold hover:bg-[#0c3f74] right-1 top-5"
+              className="me-2 bg-[#0c3f74] font-bold hover:bg-[#0c3f74]"
               onClick={handleReset}
             >
               Reset
             </Button>
+            {isMobile && (
+              <div className="opacity-50">
+                <IoMenu size={40} onClick={sideBarHandler} />
+              </div>
+            )}
           </div>
 
-          <section className="lg:w-[90%] md:w-[90%] w-[98%] overflow-x-auto overflow-y-hidden mx-auto border h-[900px] pb-3 mt-10 rounded-xl">
+          <section className="lg:w-[90%] md:w-[90%] w-[98%] overflow-x-auto overflow-y-hidden mx-auto border h-[900px] pb-3 mt-5 rounded-xl">
             <div className="min-w-[900px] w-full">
               <div className="bg-[#0e4884] w-full h-14 rounded-t-xl flex items-center ps-3">
                 <Button
