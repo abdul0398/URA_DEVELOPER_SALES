@@ -3,7 +3,10 @@ import { useMemo, useState } from "react";
 
 import { MyContext } from "@/context/context";
 import { IncludeEC } from "@/types/context";
-import Dashboard from "@/components/Dashboard/Main";
+import dynamic from "next/dynamic";
+const Dashboard = dynamic(() => import("@/components/Dashboard/Main"), {
+  ssr: false,
+});
 
 export default function Home() {
   const [includeEC, setIncludeEC] = useState<IncludeEC>(IncludeEC.All);

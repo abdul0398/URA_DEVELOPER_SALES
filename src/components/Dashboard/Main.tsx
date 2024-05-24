@@ -4,7 +4,6 @@ import UnitSold from "../graphs/unitSold/Main";
 import MonthDetail from "../monthDetail/Main";
 import UnitTable from "../table/Main";
 import { IoMenu } from "react-icons/io5";
-import { useMediaQuery } from "react-responsive";
 import Sidebar from "../sidebar/Main";
 import { Button } from "../ui/button";
 import { IncludeEC } from "@/types/context";
@@ -15,9 +14,8 @@ const EC = dynamic(() => import("../ecs/Main"), {
 });
 export default function Dashboard() {
   const { includeEC, setSelectedMonth, setIncludeEC } = useContext(MyContext);
-  const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
+
   const [selectedView, setSelectedView] = useState<string>("units_sold_table");
-  const [isOpen, setIsOpen] = useState<boolean>(!isMobile);
 
   const handleReset = () => {
     setIncludeEC(IncludeEC.All);
@@ -31,6 +29,7 @@ export default function Dashboard() {
     }
   }, [selectedView]);
 
+  const isMobile = window.innerWidth < 768;
   const viewGenerator = () => {
     switch (selectedView) {
       case "units_sold_graph":
@@ -45,6 +44,7 @@ export default function Dashboard() {
         return <UnitSold />;
     }
   };
+  const [isOpen, setIsOpen] = useState<boolean>(!isMobile);
 
   const sideBarHandler = () => {
     setIsOpen(!isOpen);
