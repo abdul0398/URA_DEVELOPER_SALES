@@ -14,24 +14,28 @@ const List = dynamic(
 
 export default function UnitTable() {
   const { includeEC, selectedMonth } = useContext(MyContext);
-  const [listings, setListings] = React.useState<any[]>(
-    data[selectedMonth].listings
-  );
+  const sortedListing = data[selectedMonth].listings.sort((a: any, b: any) => {
+    return a.project.localeCompare(b.project);
+  });
+  const [listings, setListings] = React.useState<any[]>(sortedListing);
   const [sortConfig, setSortConfig] = React.useState<{
     key: string;
     direction: string;
-  } | null>(null);
+  } | null>({
+    key: "project",
+    direction: "ascending",
+  });
 
   useEffect(() => {
     if (includeEC != "All") {
-      const newListing = data[selectedMonth].listings.filter((item: any) => {
+      const newListing = sortedListing.filter((item: any) => {
         return (
           item.propertyType == (includeEC == "EC" ? "Exec Condo" : "Non-Landed")
         );
       });
       setListings([...newListing]);
     } else {
-      setListings([...data[selectedMonth].listings]);
+      setListings([...sortedListing]);
     }
   }, [includeEC]);
 
